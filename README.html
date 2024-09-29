@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bright SDK Update Plugin Integration Guide</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            color: #333;
+        }
+        h1, h2, h3 {
+            color: #0044cc;
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        h2 {
+            border-bottom: 2px solid #0044cc;
+            padding-bottom: 5px;
+        }
+        ul, ol {
+            margin: 20px 0;
+        }
+        ul li, ol li {
+            margin-bottom: 10px;
+        }
+        code, pre {
+            background-color: #f4f4f4;
+            border-radius: 5px;
+            padding: 2px 5px;
+        }
+        pre {
+            padding: 10px;
+            overflow-x: auto;
+            border-left: 3px solid #0044cc;
+        }
+        a {
+            color: #0044cc;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        p {
+            margin: 20px 0;
+        }
+        .important {
+            background-color: #ffeb3b;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Bright SDK Update Plugin Integration Guide</h1>
+
+    <h2>Introduction</h2>
+    <p>The Bright SDK Update Plugin is designed to automate the process of updating the Bright SDK within your project. By integrating this plugin, developers can effortlessly switch between SDK versions, ensuring they are always working with the latest features and fixes. This plugin also simplifies debugging by allowing easy transitions between different versions of the SDK.</p>
+
+    <h2>Benefits</h2>
+    <ul>
+        <li><strong>Automated Updates:</strong> Automatically fetches and installs the latest version of the Bright SDK, reducing manual overhead.</li>
+        <li><strong>Seamless Integration:</strong> Simplifies the process of adding the Bright SDK as a dependency in your project’s <code>build.gradle</code> file.</li>
+        <li><strong>Version Management:</strong> Allows easy switching between different SDK versions, which is particularly useful for testing and debugging.</li>
+        <li><strong>Local Caching:</strong> Supports caching of SDK files, minimizing the need for repeated downloads.</li>
+    </ul>
+
+    <h2>Prerequisites</h2>
+    <ul>
+        <li><strong>Java Development Kit (JDK):</strong> Version 17 or higher, with backward compatibility for Java 8.</li>
+        <li><strong>Gradle:</strong> Version 6.7 or later.</li>
+        <li><strong>Internet Access:</strong> Required for downloading the SDK version information and the SDK itself.</li>
+    </ul>
+
+    <h2>Getting Started</h2>
+
+    <h3>System Requirements</h3>
+    <ol>
+        <li><strong>JDK:</strong> Version 17 or higher.</li>
+        <li><strong>Gradle:</strong> Version 6.7 or later.</li>
+        <li><strong>Supported Platforms:</strong> Any platform where Java and Gradle can run (e.g., Windows, macOS, Linux).</li>
+    </ol>
+
+    <h2>Installation Instructions</h2>
+
+    <h3>Step-by-Step Integration into the Application</h3>
+
+    <h3>Step 1: Adding the Plugin to Your Project</h3>
+    <ol>
+        <li>
+            <p><strong>Create a <code>brightsdk.gradle</code> File in the <code>app/</code> Directory:</strong></p>
+            <p>Add a file named <code>brightsdk.gradle</code> in your <code>app/</code> directory with the following content:</p>
+            <pre><code>buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'io.github.vladislavs-luminati:bright-sdk-gradle:1+'
+    }
+}
+
+apply plugin: com.brightdata.BrightSdkPlugin
+
+// this configuration contains default values and can be modified
+brightsdk {
+    useLocalCache = false // set to true to use dedicated local cache for sdk files in the current directory
+    ext = 'brightsdk' // override extension name for sdk files in case you need to share it with other plugins
+    dir = 'libs' // specify directory where sdk files will be stored, relative to this file
+    version = 'latest' // specify sdk version, e.g. 1.482.706
+}
+
+tasks.named("preBuild").configure {
+    dependsOn updateBrightSdk
+}</code></pre>
+        </li>
+        <li>
+            <p><strong>Register plugin in <code>app/build.gradle</code>:</strong></p>
+            <p>Add the following lines to your <code>app/build.gradle</code> file:</p>
+            <pre><code>apply from: 'brightsdk.gradle'</code></pre>
+        </li>
+    </ol>
+
+    <h3>Step 2: Verifying the Integration</h3>
+    <p>Run your Gradle build process as usual (<code>./gradlew build</code>). The <code>updateBrightSdk</code> task will automatically execute before the <code>preBuild</code> task, ensuring that the latest version of the Bright SDK is used in your project.</p>
+
+    <h3>Explanation:</h3>
+    <ul>
+        <li><strong><code>brightsdk.gradle</code> in <code>app/</code> Directory:</strong> This file contains the configuration and application of the Bright SDK Update Plugin.</li>
+        <li><strong>Auto-Update Setup:</strong> By adding the specified lines in <code>app/build.gradle</code>, you ensure that the SDK update runs before the <code>preBuild</code> task, which is an early stage in the build process.</li>
+    </ul>
+
+    <h2>Plugin Configuration</h2>
+
+    <h3>Basic Configuration</h3>
+    <ul>
+        <li><strong>dir:</strong> The directory where the SDK files will be stored (default: <code>"libs"</code>).</li>
+        <li><strong>version:</strong> The SDK version to use (default: <code>"latest"</code>).</li>
+        <li><strong>ext:</strong> The file extension for the SDK files (default: <code>"brightsdk"</code>).</li>
+        <li><strong>useLocalCache:</strong> Whether to use a local cache for the SDK files (default: <code>false</code>).</li>
+    </ul>
+
+    <h3>Advanced Configuration</h3>
+    <p>Modify <code>brightsdk</code> configuration block values to override defaults.</p>
+
+    <h2>Updating the Plugin</h2>
+
+    <h3>Checking for Updates</h3>
+    <p>The plugin will automatically check for the latest SDK version based on the provided configuration.</p>
+
+    <h3>Updating the Plugin</h3>
+    <p>If version is set to "latest", and a newer version is available, the plugin will download and replace the existing SDK files.</p>
+
+    <h3>Backward Compatibility</h3>
+    <p>The plugin supports backward compatibility with older SDK versions, allowing you to switch between versions as needed.</p>
+
+    <h2>Best Practices</h2>
+
+    <ul>
+        <li><strong>Regular Updates:</strong> Run your gradle with <code>--refresh-dependencies</code> to keep your plugins up-to-date with the latest features and bugfixes.</li>
+    </ul>
+
+    <h2>FAQ</h2>
+
+    <h3>Common Questions</h3>
+    <ol>
+        <li><strong>How do I switch between SDK versions?</strong>
+            <p>Modify the <code>version</code> property in your <code>brightsdk</code> configuration block.</p>
+        </li>
+        <li><strong>What if the SDK download fails?</strong>
+            <p>Ensure you have a stable internet connection and try again.</p>
+        </li>
+    </ol>
+
+    <h3>Troubleshooting</h3>
+    <ul>
+        <li><strong>Build Failures:</strong> Check the console output for specific error messages.</li>
+        <li><strong>Dependency Issues:</strong> Ensure the <code>build.gradle</code> file includes the necessary dependencies.</li>
+    </ul>
+
+    <h2>Support</h2>
+
+    <p>Full Java Plugin documentation is available <a href="https://vladislavs-luminati.github.io/bright-sdk-gradle-plugin-docs/com/brightdata/package-summary.html">here</a></p>
+
+    <p>If you encounter any issues or have any questions, please reach out to our support team:</p>
+    <ul>
+        <li><strong>Email:</strong> <a href="mailto:vladislavs@brightdata.com">vladislavs@brightdata.com</a></li>
+    </ul>
+
+    <h2>Conclusion</h2>
+
+    <p>Thank you for integrating the Bright SDK Update Plugin. We hope this guide has made the process straightforward and easy. If you have any feedback or suggestions for improvement, don't hesitate to let us know.</p>
+
+    <p>Happy coding!</p>
+</div>
+
+</body>
+</html>
