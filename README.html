@@ -59,16 +59,6 @@
             max-width: 800px;
             margin: 0 auto;
         }
-        .copy-button {
-            display: inline-block;
-            margin-left: 10px;
-            cursor: pointer;
-            padding: 5px 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 3px;
-        }
     </style>
 </head>
 <body>
@@ -112,13 +102,12 @@
         <li>
             <p><strong>Create a <code>brightsdk.gradle</code> File in the <code>app/</code> Directory:</strong></p>
             <p>Add a file named <code>brightsdk.gradle</code> in your <code>app/</code> directory with the following content:</p>
-            <button class="copy-button" onclick="copyToClipboard('brightsdk-gradle')">Copy brightsdk.gradle</button>
-            <pre id="brightsdk-gradle"><code>buildscript {
+            <pre><code>buildscript {
     repositories {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.brightdata:bright-sdk-gradle:1+'
+        classpath 'io.github.vladislavs-luminati:bright-sdk-gradle:1+'
     }
 }
 
@@ -135,21 +124,16 @@ brightsdk {
 tasks.named("preBuild").configure {
     dependsOn updateBrightSdk
 }</code></pre>
-        <button class="copy-button" onclick="copyToClipboard('brightsdk-gradle')">Copy brightsdk.gradle</button>
         </li>
         <li>
             <p><strong>Register plugin in <code>app/build.gradle</code>:</strong></p>
             <p>Add the following lines to your <code>app/build.gradle</code> file:</p>
-            <pre id="build-gradle"><code>apply from: 'brightsdk.gradle'</code></pre>
-            <button class="copy-button" onclick="copyToClipboard('build-gradle')">Copy build.gradle snippet</button>
+            <pre><code>apply from: 'brightsdk.gradle'</code></pre>
         </li>
     </ol>
 
     <h3>Step 2: Verifying the Integration</h3>
-    <p>Run your Gradle build process as usual, e.g:</p>
-    <pre id="gradle-build"><code>./gradlew build</code></pre>.
-    <button class="copy-button" onclick="copyToClipboard('gradle-build')">Copy gradle wrapper build command</button>
-    <p>The <code>updateBrightSdk</code> task will automatically execute before the <code>preBuild</code> task, ensuring that the latest version of the Bright SDK is used in your project.</p>
+    <p>Run your Gradle build process as usual (<code>./gradlew build</code>). The <code>updateBrightSdk</code> task will automatically execute before the <code>preBuild</code> task, ensuring that the latest version of the Bright SDK is used in your project.</p>
 
     <h3>Explanation:</h3>
     <ul>
@@ -220,18 +204,6 @@ tasks.named("preBuild").configure {
 
     <p>Happy coding!</p>
 </div>
-<script>
-    function copyToClipboard(elementId) {
-        const pre = document.getElementById(elementId);
-        const text = pre.innerText;
 
-        const textarea = document.createElement('textarea');
-        textarea.value = text;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-    }
-</script>
 </body>
 </html>
